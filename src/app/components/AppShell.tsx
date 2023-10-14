@@ -9,10 +9,11 @@ import {
   Title,
 } from "@mantine/core";
 import { IconBooks, IconList, IconPlus } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 
 export default function BasicAppShell({ children }: any) {
   const [opened, { toggle }] = useDisclosure();
-
+const router = useRouter()
   return (
     <AppShell
       header={{ height: 60 }}
@@ -33,6 +34,7 @@ export default function BasicAppShell({ children }: any) {
           size="md"
           justify="flex-start"
           fullWidth
+          onClick={()=>router.push("/")}
         >
           Wszystkie książki
         </Button>
@@ -43,6 +45,7 @@ export default function BasicAppShell({ children }: any) {
           size="md"
           justify="flex-start"
           fullWidth
+          onClick={()=>router.push("/new")}
         >
           Dodaj książkę
         </Button>
