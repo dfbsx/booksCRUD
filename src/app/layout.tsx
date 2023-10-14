@@ -1,22 +1,27 @@
-import './globals.css'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import "@mantine/core/styles.css";
+import React from "react";
+import { MantineProvider, ColorSchemeScript } from "@mantine/core";
+import BasicAppShell from "./components/AppShell";
 
-const inter = Inter({ subsets: ['latin'] })
+export const metadata = {
+  title: "booksCRUD",
+  description: "Projekt - wykład monograficzny",
+};
 
-export const metadata: Metadata = {
-  title: 'BooksCRUD',
-  description: 'Aplikacja stworzona w ramach odrobienia nieobecności na wykładzie monograficznym',
-}
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: any }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <head>
+        <ColorSchemeScript />
+        <link rel="shortcut icon" href="/favicon.svg" />
+        <meta
+          name="viewport"
+          content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
+        />
+      </head>
+      <body>
+        <MantineProvider><BasicAppShell children={children}/></MantineProvider>
+      </body>
     </html>
-  )
+  );
 }
