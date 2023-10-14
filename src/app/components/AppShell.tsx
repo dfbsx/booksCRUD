@@ -22,6 +22,7 @@ const router = useRouter()
     >
       <AppShell.Header>
         <Group h="100%" px="md">
+        <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <IconBooks height="32" width="32" stroke="1.25" />
           <Title order={3}>booksCRUD</Title>
         </Group>
