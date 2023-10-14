@@ -39,4 +39,35 @@ export async function GET() {
       });
     }
   }
-  
+
+   export async function updateContact(request: Request,{ params }: { params: { id: any } }) {
+    const id = params.id;
+    try {
+      const json = await request.json();
+      const feedback = await prisma.book.update({
+        where: {
+          id:id,
+        },
+        data: json,
+      });
+      const json_response = {
+        status: "success",
+        data: {
+          feedback,
+        }
+      };
+      return new Response(JSON.stringify(json_response), {
+        status: 201,
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (error:any) {
+      const error_response = {
+        status: "error",
+        message: error.message,
+      };
+      return new Response(JSON.stringify(error_response), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }
