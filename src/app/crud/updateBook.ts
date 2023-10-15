@@ -1,9 +1,8 @@
 import axios from 'axios';
 import API_URL  from './localApi';
-import { Book } from '../new/page';
+import { newBook } from '../page';
 
-export const updateBook = (data: Book) => {
-  console.log(data)
+export const updateBook = (data: newBook) => {
   return axios({
     method: 'POST',
     url: `${API_URL}`,

@@ -15,52 +15,31 @@ export async function GET() {
   export async function POST(request: Request) {
     try {
       const json = await request.json();
-      const feedback = await prisma.book.create({
-        data: json,
-      });
+      let feedback;
+      if (json.id) {
+        const id = json.id;
+        feedback = await prisma.book.update({
+          where: {
+            id: id,
+          },
+          data: json,
+        });
+      } else {
+        feedback = await prisma.book.create({
+          data: json,
+        });
+      }
       const json_response = {
         status: "success",
         data: {
           feedback,
-        }
-      };
-      return new Response(JSON.stringify(json_response), {
-        status: 201,
-        headers: { "Content-Type": "application/json" },
-      });
-    } catch (error:any) {
-      const error_response = {
-        status: "error",
-        message: error.message,
-      };
-      return new Response(JSON.stringify(error_response), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-  }
-
-   export async function updateContact(request: Request,{ params }: { params: { id: any } }) {
-    const id = params.id;
-    try {
-      const json = await request.json();
-      const feedback = await prisma.book.update({
-        where: {
-          id:id,
         },
-        data: json,
-      });
-      const json_response = {
-        status: "success",
-        data: {
-          feedback,
-        }
       };
       return new Response(JSON.stringify(json_response), {
         status: 201,
         headers: { "Content-Type": "application/json" },
       });
-    } catch (error:any) {
+    } catch (error: any) {
       const error_response = {
         status: "error",
         message: error.message,
@@ -71,3 +50,4 @@ export async function GET() {
       });
     }
   }
+  

@@ -1,26 +1,34 @@
 "use client";
 import { Button, Flex, Select, Text, TextInput } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { addBook } from "../crud/addBook";
+import { useRouter } from "next/navigation";
 export type Book = {
-    title: string;
-    author: string;
-    version: string;
-    status: string;
-  };
+  title: string;
+  author: string;
+  version: string;
+  status: string;
+};
 export default function newBook() {
-  const form = useForm();
+  const router = useRouter();
+  const form = useForm({
+    initialValues: {
+      title: "",
+      author: "",
+      version: "",
+      status: "",
+    },
+  });
   const handleAddNew = () => {
     let newBook: Book = {
-        title: typeof form.values.title === 'string' ? form.values.title : "",
-        author: typeof form.values.author === 'string' ? form.values.author : "",
-        version: typeof form.values.version === 'string' ? form.values.version : "",
-        status: typeof form.values.status === 'string' ? form.values.status : "",
-      };
+      title: form.values.title !== "" ? form.values.title : "",
+      author: form.values.author !== "" ? form.values.author : "",
+      version: form.values.version !== "" ? form.values.version : "",
+      status: form.values.status !== "" ? form.values.status : "",
+    };
     addBook(newBook)
-    .then((resp)=>console.log(resp))
-    .catch((err)=>console.log(err))
+      .then((resp) => router.push("/"))
+      .catch((err) => console.log(err));
   };
   return (
     <div>
@@ -46,9 +54,8 @@ export default function newBook() {
             label="Autor"
             placeholder="Adam Mickiewicz"
             {...form.getInputProps("author")}
-          />{" "}
-          <DateInput
-            valueFormat="DD.MM.YYYY"
+          />
+          <TextInput
             label="Data wydania"
             placeholder="Data wydania"
             size="md"
