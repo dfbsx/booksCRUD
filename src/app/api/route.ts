@@ -50,4 +50,59 @@ export async function GET() {
       });
     }
   }
+
+  export async function DELETE(request: Request) {
+    try {
+      const json = await request.json();
+      if (json.id) {
+        const id = json.id;
+        const feedback = await prisma.book.delete({
+          where: {
+            id: id,
+          },
+        });
+  
+        if (feedback) {
+          const json_response = {
+            status: "success",
+            data: {
+              feedback,
+            },
+          };
+          return new Response(JSON.stringify(json_response), {
+            status: 201,
+            headers: { "Content-Type": "application/json" },
+          });
+        } else {
+          const error_response = {
+            status: "error",
+            message: "Deletion failed or the book does not exist.",
+          };
+          return new Response(JSON.stringify(error_response), {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+      } else {
+        const error_response = {
+          status: "error",
+          message: "Invalid request. 'id' is required in the JSON data."
+        };
+        return new Response(JSON.stringify(error_response), {
+          status: 400, 
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+    } catch (error: any) {
+      const error_response = {
+        status: "error",
+        message: error.message,
+      };
+      return new Response(JSON.stringify(error_response), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }
+  
   

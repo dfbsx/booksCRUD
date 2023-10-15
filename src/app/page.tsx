@@ -2,6 +2,7 @@
 import {
   Button,
   Flex,
+  Group,
   Modal,
   Select,
   Table,
@@ -13,6 +14,7 @@ import { getBooks } from "./crud/getBooks";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { updateBook } from "./crud/updateBook";
+import { deleteBook } from "./crud/deteteBook";
 export type newBook = {
   id: number | undefined;
   title: string | undefined;
@@ -31,6 +33,7 @@ export default function HomePage() {
     },
   });
   const [opened, { open, close }] = useDisclosure(false);
+  const [opened2, handlers] = useDisclosure(false);
   const [books, setBooks] = useState<{
     [key: string]: {
       id: number;
@@ -60,8 +63,17 @@ export default function HomePage() {
       })
       .catch((err) => console.log(err));
   };
+  const handleDelete = () => {
+    if (bookData?.id !== undefined) {
+      deleteBook(bookData?.id)
+        .then((resp) => {
+          setRefreshing(true);
+          handlers.close();
+        })
+        .catch((err) => console.log(err));
+    }
+  };
   useEffect(() => {
-    console.log("forrm",form.values)
     setRefreshing(false);
     getBooks()
       .then((resp) => setBooks(resp.data.books))
@@ -86,6 +98,19 @@ export default function HomePage() {
           Edytuj
         </Button>
       </Table.Td>
+      <Table.Td>
+        <Button
+          variant="subtle"
+          color="red"
+          size="xs"
+          onClick={() => {
+            handlers.open();
+            setBookData(book);
+          }}
+        >
+          Usuń
+        </Button>
+      </Table.Td>
     </Table.Tr>
   ));
   const ths = (
@@ -95,11 +120,19 @@ export default function HomePage() {
       <Table.Th>Rok wydania</Table.Th>
       <Table.Th>Status</Table.Th>
       <Table.Th></Table.Th>
+      <Table.Th></Table.Th>
     </Table.Tr>
   );
   return (
     <div>
-      <Modal opened={opened} onClose={()=>{close(); form.reset()}} title="Edytuj książkę">
+      <Modal
+        opened={opened}
+        onClose={() => {
+          close();
+          form.reset();
+        }}
+        title="Edytuj książkę"
+      >
         <form>
           <Flex
             gap="md"
@@ -143,6 +176,26 @@ export default function HomePage() {
             </Button>
           </Flex>
         </form>
+      </Modal>
+      <Modal
+        opened={opened2}
+        onClose={() => {
+          handlers.close();
+        }}
+        title="Czy na pewno chcesz usunąć książkę?"
+      >
+        <Group grow>
+          <Button
+            variant="subtle"
+            color="dark"
+            onClick={() => handlers.close()}
+          >
+            Anuluj
+          </Button>
+          <Button variant="filled" color="red" onClick={() => handleDelete()}>
+            Usuń
+          </Button>
+        </Group>
       </Modal>
       <Text fw={500} mb="xl">
         Twoje książki:
