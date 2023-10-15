@@ -17,6 +17,7 @@
     "@prisma/client": "^5.4.2",
     "@tabler/icons-react": "^2.39.0",
     "axios": "^1.5.1",
+    "docker": "^1.0.0",
     "next": "13.5.4",
     "react": "^18",
     "react-dom": "^18"
