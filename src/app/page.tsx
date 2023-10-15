@@ -11,10 +11,8 @@ import {
 import { useEffect, useState } from "react";
 import { getBooks } from "./crud/getBooks";
 import { useDisclosure } from "@mantine/hooks";
-import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { updateBook } from "./crud/updateBook";
-import { useRouter } from "next/navigation";
 export type newBook = {
   id: number | undefined;
   title: string | undefined;
@@ -23,15 +21,15 @@ export type newBook = {
   status: string | undefined;
 };
 export default function HomePage() {
+  const [isRefreshing, setRefreshing] = useState(false);
   const form = useForm({
     initialValues: {
-      title: '',
+      title: "",
       author: "",
       version: "",
-      status:"",
+      status: "",
     },
   });
-  const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
   const [books, setBooks] = useState<{
     [key: string]: {
@@ -43,26 +41,33 @@ export default function HomePage() {
     };
   }>({});
   const [bookData, setBookData] = useState<newBook>();
-  useEffect(() => {
-    console.log(typeof form.values.version)
-    getBooks()
-      .then((resp) => setBooks(resp.data.books))
-      .catch((err) => console.log(err));
-  }, [form.values.version]);
-  const booksArray = Object.values(books);
   const handleUpdate = () => {
     let updateData: newBook = {
       id: bookData?.id,
       title: form.values?.title === "" ? bookData?.title : form.values.title,
-      author: form.values?.author === "" ? bookData?.author : form.values.author,
-      version: form.values.version === "" ? bookData?.version : form.values.version,
-      status: form.values?.status === "" ? bookData?.status : form.values.status,
+      author:
+        form.values?.author === "" ? bookData?.author : form.values.author,
+      version:
+        form.values.version === "" ? bookData?.version : form.values.version,
+      status:
+        form.values?.status === "" ? bookData?.status : form.values.status,
     };
-    console.log("up",updateData)
+    setRefreshing(true);
     updateBook(updateData)
-      .then((resp) => router.push("/"))
+      .then((resp) => {
+        close();
+        form.reset();
+      })
       .catch((err) => console.log(err));
   };
+  useEffect(() => {
+    console.log("forrm",form.values)
+    setRefreshing(false);
+    getBooks()
+      .then((resp) => setBooks(resp.data.books))
+      .catch((err) => console.log(err));
+  }, [isRefreshing, form.values]);
+  const booksArray = Object.values(books);
   const rows = booksArray.map((book, i) => (
     <Table.Tr key={i}>
       <Table.Td>{book.title}</Table.Td>
@@ -87,14 +92,14 @@ export default function HomePage() {
     <Table.Tr>
       <Table.Th>Tytuł</Table.Th>
       <Table.Th>Autor</Table.Th>
-      <Table.Th>Data wydania</Table.Th>
+      <Table.Th>Rok wydania</Table.Th>
       <Table.Th>Status</Table.Th>
       <Table.Th></Table.Th>
     </Table.Tr>
   );
   return (
     <div>
-      <Modal opened={opened} onClose={close} title="Edytuj książkę">
+      <Modal opened={opened} onClose={()=>{close(); form.reset()}} title="Edytuj książkę">
         <form>
           <Flex
             gap="md"
@@ -115,8 +120,7 @@ export default function HomePage() {
               placeholder={bookData?.author}
               {...form.getInputProps("author")}
             />
-            <DateInput
-              valueFormat="DD.MM.YYYY"
+            <TextInput
               label="Data wydania"
               placeholder={bookData?.version}
               size="md"
