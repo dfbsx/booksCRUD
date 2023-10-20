@@ -23,6 +23,8 @@ RUN \
 # Copy the rest of your application code
 COPY . .
 
+RUN npx prisma generate
+
 # Build the application
 RUN npm run build
 
@@ -39,7 +41,7 @@ COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app ./
 
 # Add any runtime configuration or startup commands here
-RUN npx prisma generate
+
 
 # Specify the default command to run your application
 CMD ["npm", "run", "start:migrate:prisma"]
