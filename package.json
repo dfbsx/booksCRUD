@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "start:migrate:prisma":"prisma migrate deploy && npm run start",
+    "start:docker": "docker-compose up --force-recreate",
+    "build:docker": "docker-compose build"
   },
   "dependencies": {
     "@mantine/core": "^7.1.3",

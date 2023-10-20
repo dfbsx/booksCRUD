@@ -12,8 +12,9 @@ import { IconBooks, IconList, IconPlus } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
 export default function BasicAppShell({ children }: any) {
+  //komponent AppShell z biblioteki Mantine
   const [opened, { toggle }] = useDisclosure();
-const router = useRouter()
+  const router = useRouter();
   return (
     <AppShell
       header={{ height: 60 }}
@@ -22,7 +23,7 @@ const router = useRouter()
     >
       <AppShell.Header>
         <Group h="100%" px="md">
-        <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <IconBooks height="32" width="32" stroke="1.25" />
           <Title order={3}>booksCRUD</Title>
         </Group>
@@ -35,7 +36,7 @@ const router = useRouter()
           size="md"
           justify="flex-start"
           fullWidth
-          onClick={()=>router.push("/")}
+          onClick={() => router.push("/")}
         >
           Wszystkie książki
         </Button>
@@ -46,7 +47,7 @@ const router = useRouter()
           size="md"
           justify="flex-start"
           fullWidth
-          onClick={()=>router.push("/new")}
+          onClick={() => router.push("/new")}
         >
           Dodaj książkę
         </Button>

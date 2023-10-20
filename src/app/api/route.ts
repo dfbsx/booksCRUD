@@ -1,6 +1,8 @@
 import {NextResponse } from "next/server";
 import { prisma } from "../lib/prisma";
 
+
+//funkcja, która umożliwia pobranie wszystkich książek zapisanych w bazie
 export async function GET() {  
     const books = await prisma.book.findMany({
     });
@@ -12,6 +14,10 @@ export async function GET() {
     return NextResponse.json(json_response);
   }
   
+
+  //funkcja, która obsługuje zarówno dodawanie, jak i aktualizację obiektu w bazie,
+  //jeżeli znalezione zostaje id - wtedy obiekt jest aktualizowany,
+  //w przypadku braku przekazania id - tworzony jest nowy obiekt
   export async function POST(request: Request) {
     try {
       const json = await request.json();
@@ -51,6 +57,7 @@ export async function GET() {
     }
   }
 
+  //funkcja, do której przekazywane jest id obiektu, umożliwia usunięcie obiektu o tym id z bazy
   export async function DELETE(request: Request) {
     try {
       const json = await request.json();

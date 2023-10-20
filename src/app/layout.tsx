@@ -7,7 +7,12 @@ export const metadata = {
   title: "booksCRUD",
   description: "Projekt - wykład monograficzny",
 };
-
+/**Layout aplikacji dla projektu wygenerowanego w Next.js
+ * Aby umożliwić korzystanie z biblioteki komponentów Mantine,
+ * tworzone komponenty obleczone są w znaczniki <Mantine Provider>
+ * Dodatkowo wykorzystano BasicAppShell, który zapewnia gotową strukturę,
+ * złożoną z nagłówka, nawigacji i części głównej
+ */
 export default function RootLayout({ children }: { children: any }) {
   return (
     <html lang="en">

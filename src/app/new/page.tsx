@@ -3,15 +3,17 @@ import { Button, Flex, Select, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { addBook } from "../crud/addBook";
 import { useRouter } from "next/navigation";
-export type Book = {
+
+//tworzenie strony obsługującej dodawanie do bazy
+export type Book = { //typ wpisywanych danych
   title: string;
   author: string;
   version: string;
   status: string;
 };
-export default function newBook() {
-  const router = useRouter();
-  const form = useForm({
+export default function newBook() { //funkcja główna
+  const router = useRouter(); //stworzenie możliwości używania hooka useRouter
+  const form = useForm({ //hook useForm, inicjalizacja początkowych wartości
     initialValues: {
       title: "",
       author: "",
@@ -19,15 +21,15 @@ export default function newBook() {
       status: "",
     },
   });
-  const handleAddNew = () => {
-    let newBook: Book = {
+  const handleAddNew = () => { //obsługa dodania nowej książki
+    let newBook: Book = { //jeżeli wartość w formularzu nie jest pusta bierzemy ją, jeśli nie, zapisujemy ""
       title: form.values.title !== "" ? form.values.title : "",
       author: form.values.author !== "" ? form.values.author : "",
       version: form.values.version !== "" ? form.values.version : "",
       status: form.values.status !== "" ? form.values.status : "",
     };
-    addBook(newBook)
-      .then((resp) => router.push("/"))
+    addBook(newBook)//wywołanie funkcji przekazania do serwera danych książki
+      .then((resp) => router.push("/"))//przekierowanie do strony głównej
       .catch((err) => console.log(err));
   };
   return (
