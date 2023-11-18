@@ -1,6 +1,32 @@
 import {NextResponse } from "next/server";
 import { prisma } from "../lib/prisma";
 
+//fukcja zwracająca status i wiadoomość błędu
+const createErrorResponse = (s: string, m: string) => {
+  let status = s;
+  let message = m;
+
+  const errorResponse = {
+    status: status,
+    message: message,
+  };
+
+  return errorResponse;
+};
+
+
+//funkcja zwracająca odpowiedź z serwera
+const createApiResponse = (resp : {}, status: number, headers: {}) =>{
+  const json_response = {
+    data: resp,
+  };
+
+  return new Response(JSON.stringify(json_response), {
+    status: status,
+    headers: headers,
+  });
+
+}
 
 //funkcja, która umożliwia pobranie wszystkich książek zapisanych w bazie
 export async function GET() {  
@@ -41,19 +67,10 @@ export async function GET() {
           feedback,
         },
       };
-      return new Response(JSON.stringify(json_response), {
-        status: 201,
-        headers: { "Content-Type": "application/json" },
-      });
+      return createApiResponse(json_response,201,{ "Content-Type": "application/json"});
     } catch (error: any) {
-      const error_response = {
-        status: "error",
-        message: error.message,
-      };
-      return new Response(JSON.stringify(error_response), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
+      const error_response = createErrorResponse("error",error.message);
+      return createApiResponse(error_response,500,{"Content-Type": "application/json"});
     }
   }
 
@@ -76,39 +93,18 @@ export async function GET() {
               feedback,
             },
           };
-          return new Response(JSON.stringify(json_response), {
-            status: 201,
-            headers: { "Content-Type": "application/json" },
-          });
+          return createApiResponse(json_response,201,{"Content-Type": "application/json"});
         } else {
-          const error_response = {
-            status: "error",
-            message: "Deletion failed or the book does not exist.",
-          };
-          return new Response(JSON.stringify(error_response), {
-            status: 500,
-            headers: { "Content-Type": "application/json" },
-          });
+          const error_response = createErrorResponse("error","Deletion failed or the book does not exist")
+          return createApiResponse(error_response,500,{"Content-Type": "application/json"});
         }
       } else {
-        const error_response = {
-          status: "error",
-          message: "Invalid request. 'id' is required in the JSON data."
-        };
-        return new Response(JSON.stringify(error_response), {
-          status: 400, 
-          headers: { "Content-Type": "application/json" },
-        });
+        const error_response = createErrorResponse("error","Invalid request. 'id' is required in the JSON data.")
+        return createApiResponse(error_response,400,{"Content-Type": "application/json"});
       }
     } catch (error: any) {
-      const error_response = {
-        status: "error",
-        message: error.message,
-      };
-      return new Response(JSON.stringify(error_response), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
+      const error_response = createErrorResponse("error",error.message)
+      return createApiResponse(error_response,500,{"Content-Type": "application/json"});
     }
   }
   
